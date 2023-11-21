@@ -1,8 +1,8 @@
 dataset_paths = {
-	'celeba_train': '',
-	'celeba_test': '',
-	'celeba_train_sketch': '',
-	'celeba_test_sketch': '',
+	'celeba_train': '../output/train',
+	'celeba_test': '../output/test',
+	'celeba_train_sketch': '../output/train_sketch',
+	'celeba_test_sketch': '../output/test_sketch',
 	'celeba_train_segmentation': '',
 	'celeba_test_segmentation': '',
 	'ffhq': '',
