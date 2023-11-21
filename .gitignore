@@ -1,5 +1,9 @@
 pretrained_models
-**/__pycache__/ 
-configs/paths_config.py
-
+**/__pycache__/
+**paths_config.py
+sketch
+jobs
+slurm
+results
 zzn
+*.dat
