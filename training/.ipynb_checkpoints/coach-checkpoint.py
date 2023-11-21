@@ -241,8 +241,7 @@ class Coach:
 			loss += loss_moco * self.opts.moco_lambda
 		if self.opts.attention_lambda > 0:
 			#, attention_improvement, tmp = self.attention_loss(y_hat, y, x)
-			#loss_attention, sim_improvement, id_logs = self.attention_loss(y_hat, y, x)
-			loss_attention, tmp1, tmp2 = self.attention_loss(y_hat, y, x)
+			loss_attention, sim_improvement, id_logs = self.attention_loss(y_hat, y, x)
 			loss_dict['loss_attention'] = float(loss_attention)
 			#loss_dict['attention_improve'] = float(attention_improvement)
 			loss += loss_attention * self.opts.attention_lambda
