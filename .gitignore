@@ -1,5 +1,5 @@
 pretrained_models
-**/__pycache__/
-**paths_config.py
+**/__pycache__/ 
+configs/paths_config.py
 
 zzn
