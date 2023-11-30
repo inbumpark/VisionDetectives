@@ -17,6 +17,6 @@ model_paths = {
 	'mtcnn_onet': 'pretrained_models/mtcnn/onet.npy',
 	'shape_predictor': 'shape_predictor_68_face_landmarks.dat',
 	'moco': 'pretrained_models/moco_v2_800ep_pretrain.pth.tar',
-	'cbam': '/workspace/pixel2style2pixel/models/attentionmodule/MODELS/cbam.py',
-	'cbam_pt': '/workspace/pixel2style2pixel/models/attentionmodule/MODELS/RESNET50_CBAM_new_name_wrap.pth'   
+	'cbam': 'models/attentionmodule/MODELS/cbam.py',
+	'cbam_pt': 'best_model.pt'
 }

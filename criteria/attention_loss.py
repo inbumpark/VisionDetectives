@@ -3,7 +3,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from configs.paths_config import model_paths
-from models.attentionmodule.MODELS.cbam import CBAM  # CBAM 모듈을 import합니다.
+from models.attentionmodule.MODELS.cbam import CBAM  # CBAM import
 
 
 class AttentionLoss(nn.Module):
@@ -16,12 +16,14 @@ class AttentionLoss(nn.Module):
 		self.model.eval()
 		#import ipdb
 		#ipdb.set_trace()
-		self.attention = CBAM(gate_channels=2048)  # CBAM 모듈을 초기화합니다.
+		self.attention = CBAM(gate_channels=2048)  # initialize
 
 	@staticmethod
 	def __load_model():
 		import torchvision.models as models
 		model = models.__dict__["resnet50"]()
+		#please solve the error RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[4, 1, 224, 224] to have 3 channels, but got 1 channels instead
+		#nn.Conv2d(in_channels=1, out_channels=64, kernel_size=7, stride=2, padding=3, bias=False)
 		# freeze all layers but the last fc
 		for name, param in model.named_parameters():
 			if name not in ['fc.weight', 'fc.bias']:
@@ -52,6 +54,7 @@ class AttentionLoss(nn.Module):
 		x_feats = nn.functional.normalize(x_feats, dim=1)
 		x_feats = x_feats.squeeze()
 		return x_feats
+	
     
 	'''def forward(self, y_hat, y, x):
 		y_attention = self.attention(y)
@@ -68,11 +71,41 @@ class AttentionLoss(nn.Module):
 
 	def forward(self, y_hat, y, x):
 		n_samples = x.shape[0]
-		x_feats = self.extract_feats(x)
+		import torch
+		import cv2
+		import numpy as np
+		import matplotlib.pyplot as plt
+
+		# Assume 'tensor' is your [4,3,256,256] tensor
+		#for i in range(x.shape[0]):
+			#img = x[i].detach().cpu().numpy()    # convert it into numpy array
+			#img = img.transpose((1, 2, 0))
+			
+			#if img.shape[2] == 1:
+				#img = img.squeeze(axis=2)       # change [3,256,256] to [256,256,3]\
+			#plt.imshow(img)
+			#plt.savefig(f'a_{i}.png')
+
+		# Assume 'tensor' is your [4,3,256,256] tensor
+		#for i in range(y.shape[0]):
+			#img = y[i].detach().cpu().numpy()    # convert it into numpy array
+			#img = img.transpose((1, 2, 0))      # change [3,256,256] to [256,256,3]\
+			#plt.imshow(img)
+			#plt.savefig(f'b_{i}.png')
+
+		# Assume 'tensor' is your [4,3,256,256] tensor
+		#for i in range(y_hat.shape[0]):
+			#img = y_hat[i].detach().cpu().numpy()    # convert it into numpy array
+			#img = img.transpose((1, 2, 0))      # change [3,256,256] to [256,256,3]\
+			#plt.imshow(img)
+			#plt.savefig(f'c_{i}.png')
+
+		#if x.shape[2] == 1:
+		#	x = x.squeeze(axis=2)
+		x = x.repeat_interleave(3, dim=1)
+		x_feats = self.extract_feats(x) 
 		y_feats = self.extract_feats(y)
 		y_hat_feats = self.extract_feats(y_hat)
-		#import ipdb
-		#ipdb.set_trace()
 
 		y_hat_feats = F.interpolate(y_hat_feats.view(y_hat_feats.size(0), y_hat_feats.size(1), 1, 1), size=(7, 7), mode='bilinear', align_corners=False)
 		y_hat_feats = F.interpolate(y_hat_feats, size=(7, 7), mode='bilinear', align_corners=False)
@@ -96,7 +129,7 @@ class AttentionLoss(nn.Module):
 		x_feats = F.interpolate(x_feats, size=(7, 7), mode='bilinear', align_corners=False)
 		x_attention = x_feats * attention_map
 		y_attention = y_feats * attention_map
-		# CBAM loss 계산
+		# CBAM loss
 		#loss_cbam = F.cross_entropy(y_hat_logit, y) + F.cross_entropy(y_hat_logit, x)
 		loss_cbam = F.mse_loss(y_hat_attention, y_attention) + F.mse_loss(y_hat_attention, x_attention)
 		# compute similarity improvement
@@ -114,13 +147,12 @@ class AttentionLoss(nn.Module):
 		y_feats = self.extract_feats(y)
 		y_hat_feats = self.extract_feats(y_hat)
 
-		# CBAM 모듈을 이용하여 attention map을 생성합니다.
+		# Make attention map using attention module
 		attention_map = self.attention(y_hat_feats)
 
-		# attention map과 원본 이미지를 곱하여 attention이 적용된 이미지를 생성합니다.
 		y_hat_attention = y_hat_feats * attention_map.unsqueeze(-1).unsqueeze(-1)
 		y_attention = y_feats * attention_map.unsqueeze(-1).unsqueeze(-1)
 		x_attention = x_feats * attention_map
 
-		# attention map과 각 이미지에 attention을 적용시킨 결과를 반환합니다.
+		# attention map + result
 		return attention_map, y_hat_attention, y_attention, x_attention
