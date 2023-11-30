@@ -8,6 +8,8 @@ import torch
 from PIL import Image
 from torch.utils.data import DataLoader
 import sys
+from collections import defaultdict
+import pandas as pd
 
 sys.path.append(".")
 sys.path.append("..")
@@ -16,6 +18,7 @@ from configs import data_configs
 from datasets.inference_dataset import InferenceDataset
 from utils.common import tensor2im, log_input_image
 from options.test_options import TestOptions
+from metrics import mse_loss, lpips_loss, similarity, attention
 from models.psp import pSp
 
 
@@ -67,6 +70,7 @@ def run():
 
     global_i = 0
     global_time = []
+    res_table = defaultdict(list)
     for input_batch in tqdm(dataloader):
         if global_i >= opts.n_images:
             break
@@ -92,8 +96,18 @@ def run():
                                           np.array(result.resize(resize_amount))], axis=1)
                 else:
                     # otherwise, save the original and output
-                    res = np.concatenate([np.array(input_im.resize(resize_amount)),
-                                          np.array(result.resize(resize_amount))], axis=1)
+                    source = Image.open(im_path).resize(resize_amount).convert("RGB")
+                    result = result.resize(resize_amount)
+                    res_table['mse'].append(mse_loss(source, result))
+                    res_table['lpips'].append(lpips_loss(source, result))
+                    res_table['sim'].append(similarity(input_im, source, result))
+                    # res_table['attention'].append(attention(input_im, source, result))
+                    res = np.concatenate([
+                            np.array(source.resize(resize_amount)),
+                            np.array(input_im.resize(resize_amount)),
+                            np.array(result.resize(resize_amount))
+                                          ], axis=1)
+                    
                 Image.fromarray(res).save(os.path.join(out_path_coupled, os.path.basename(im_path)))
 
             im_save_path = os.path.join(out_path_results, os.path.basename(im_path))
@@ -105,8 +119,15 @@ def run():
     result_str = 'Runtime {:.4f}+-{:.4f}'.format(np.mean(global_time), np.std(global_time))
     print(result_str)
 
+    df = pd.DataFrame(res_table)
+    df.to_csv(os.path.join(opts.exp_dir, 'table.csv'), sep='\t')
+
     with open(stats_path, 'w') as f:
-        f.write(result_str)
+        f.write(result_str + '\n')
+        f.write('MSE: {:.3f}\n'.format(np.array(res_table['mse']).mean()))
+        f.write('LPIPS: {:.3f}\n'.format(np.array(res_table['lpips']).mean()))
+        f.write('SIMILARITY: {:.3f}\n'.format(np.array(res_table['sim']).mean()))
+        # f.write('ATTENTION: {:.3f}'.format(np.array(res_table['attention']).mean()))
 
 
 def run_on_batch(inputs, net, opts):
@@ -131,6 +152,11 @@ def run_on_batch(inputs, net, opts):
         result_batch = torch.cat(result_batch, dim=0)
     return result_batch
 
+def get_table():
+
+    breakpoint()
+    prompt1_diff = np.array(metrics['score_diff1'])
+    prompt2_diff = metrics['score_diff2']
 
 if __name__ == '__main__':
     run()
