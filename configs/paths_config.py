@@ -9,8 +9,8 @@ dataset_paths = {
 }
 
 model_paths = {
-	'stylegan_ffhq': '/workspace/e2style/pretrained_models/stylegan2-ffhq-config-f.pt',
-	'ir_se50': '/workspace/e2style/pretrained_models/model_ir_se50.pth',
+	'stylegan_ffhq': 'pretrained_models/stylegan2-ffhq-config-f.pt',
+	'ir_se50': 'pretrained_models/model_ir_se50.pth',
 	'circular_face': 'pretrained_models/CurricularFace_Backbone.pth',
 	'mtcnn_pnet': 'pretrained_models/mtcnn/pnet.npy',
 	'mtcnn_rnet': 'pretrained_models/mtcnn/rnet.npy',
@@ -18,5 +18,5 @@ model_paths = {
 	'shape_predictor': 'shape_predictor_68_face_landmarks.dat',
 	'moco': 'pretrained_models/moco_v2_800ep_pretrain.pth.tar',
 	'cbam': 'models/attentionmodule/MODELS/cbam.py',
-	'cbam_pt': 'best_model.pt'
+	'cbam_pt': 'pretrained_models/best_model.pt'
 }
