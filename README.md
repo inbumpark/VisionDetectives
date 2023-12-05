@@ -1,14 +1,11 @@
 # CriminalCanvas: From Sketch to Solution in Stylized Montages
 
-Replace this to our colab
-
 <a href="https://colab.research.google.com/drive/1Qep2fBYkCuXvMlIib25FHlMvZ-VhmRAB?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" height=22.5></a>  
 
 > Given a sketch from the montage artist, we aim to reconstruct and stylize a montage of a criminal which highly resembles their appearance.
 
 ## Description   
-For the first stage, we utilize a method named pSp, which extracts feature maps from a pyramid network and inputs them into a pretrained StyleGAN generator trained on human face datasets such as CelebA-HQ to reconstruct images from a given sketch.
-
+For the first stage, we utilize a method named pSp, which extracts feature maps from a pyramid network and inputs them into a pretrained StyleGAN generator trained on human face datasets such as CelebA-HQ to reconstruct images from a given sketch.  
 The second stage stylizes the output with instructions (e.g. "brown hair and blue eyes") using InstructPix2Pix. Finally, we improve the existing pSp framework by adding our own loss function and also evaluate the method on real sketch drawings.
 
 ## Table of Contents
@@ -38,8 +35,8 @@ The second stage stylizes the output with instructions (e.g. "brown hair and blu
 ### Sketch to Face
 Here we wish to generate photo-realistic face images from ambiguous sketch images. Using style-mixing, we inherently support multi-modal synthesis for a single input.
 <p align="center">
-<img src="docs/seg2image.png" width="800px"/>
 <img src="docs/sketch2image.png" width="800px"/>
+<img src="docs/qualitative.png" width="800px"/>
 </p>
 
 ## Getting Started
