@@ -1,40 +1,21 @@
-# Encoding in Style: a StyleGAN Encoder for Image-to-Image Translation
-<a href="https://arxiv.org/abs/2008.00951"><img src="https://img.shields.io/badge/arXiv-2008.00951-b31b1b.svg" height=22.5></a>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" height=22.5></a>  
+# CriminalCanvas: From Sketch to Solution in Stylized Montages
 
-<a href="https://www.youtube.com/watch?v=bfvSwhqsTgM"><img src="https://img.shields.io/static/v1?label=CVPR 2021&message=5 Minute Video&color=red" height=22.5></a>  
-<a href="https://replicate.ai/eladrich/pixel2style2pixel"><img src="https://img.shields.io/static/v1?label=Replicate&message=Demo and Docker Image&color=darkgreen" height=22.5></a>
+Replace this to our colab
 
 <a href="http://colab.research.google.com/github/eladrich/pixel2style2pixel/blob/master/notebooks/inference_playground.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" height=22.5></a>  
 
-> We present a generic image-to-image translation framework, pixel2style2pixel (pSp). 
-Our pSp framework is based on a novel encoder network that directly generates a series of style vectors which are fed into a pretrained StyleGAN generator, 
-forming the extended W+ latent space. We first show that our encoder can directly embed real images into W+, with no additional optimization.
-Next, we propose utilizing our encoder to directly solve image-to-image translation tasks, defining them as encoding problems from some input domain into the 
-latent domain. By deviating from the standard "invert first, edit later" methodology used with previous StyleGAN encoders, our approach can handle a variety of 
-tasks even when the input image is not represented in the StyleGAN domain. We show that solving translation tasks through StyleGAN significantly simplifies the training process, as no adversary is required, has better support 
->for solving tasks without pixel-to-pixel correspondence, and inherently supports multi-modal synthesis via the resampling of styles. 
-Finally, we demonstrate the potential of our framework on a variety of facial image-to-image translation tasks, even when compared to state-of-the-art solutions designed specifically for a single task, and further show that it can be extended beyond the human facial domain. 
-
-<p align="center">
-<img src="docs/teaser.png" width="800px"/>
-<br>
-The proposed pixel2style2pixel framework can be used to solve a wide variety of image-to-image translation tasks. Here we show results of pSp on StyleGAN inversion, multi-modal conditional image synthesis, facial frontalization, inpainting and super-resolution.
-</p>
+> Given a sketch from the montage artist, we aim to reconstruct and stylize a montage of a criminal which highly resembles their appearance.
 
 ## Description   
-Official Implementation of our pSp paper for both training and evaluation. The pSp method extends the StyleGAN model to 
-allow solving different image-to-image translation problems using its encoder.
+For the first stage, we utilize a method named pSp, which extracts feature maps from a pyramid network and inputs them into a pretrained StyleGAN generator trained on human face datasets such as CelebA-HQ to reconstruct images from a given sketch.
+
+The second stage stylizes the output with instructions (e.g. "brown hair and blue eyes") using InstructPix2Pix. Finally, we improve the existing pSp framework by adding our own loss function and also evaluate the method on real sketch drawings.
 
 ## Table of Contents
   * [Description](#description)
   * [Table of Contents](#table-of-contents)
-  * [Recent Updates](#recent-updates)
-  * [Applications](#applications)
-    + [StyleGAN Encoding](#stylegan-encoding)
-    + [Face Frontalization](#face-frontalization)
-    + [Conditional Image Synthesis](#conditional-image-synthesis)
-    + [Super Resolution](#super-resolution)
+  * [Application](#application)
+    + [Sketch to Face](#sketch-to-face)
   * [Getting Started](#getting-started)
     + [Prerequisites](#prerequisites)
     + [Installation](#installation)
@@ -43,98 +24,64 @@ allow solving different image-to-image translation problems using its encoder.
   * [Training](#training)
     + [Preparing your Data](#preparing-your-data)
     + [Training pSp](#training-psp)
-      - [Training the pSp Encoder](#training-the-psp-encoder)
-      - [Frontalization](#frontalization)
-      - [Sketch to Face](#sketch-to-face)
-      - [Segmentation Map to Face](#segmentation-map-to-face)
-      - [Super Resolution](#super-resolution-1)
     + [Additional Notes](#additional-notes)
-    + [Weights & Biases Integration](#weights--biases-integration)
   * [Testing](#testing)
     + [Inference](#inference)
     + [Multi-Modal Synthesis with Style-Mixing](#multi-modal-synthesis-with-style-mixing)
     + [Computing Metrics](#computing-metrics)
-  * [Additional Applications](#additional-applications)
-    + [Toonify](#toonify)
   * [Repository structure](#repository-structure)
   * [TODOs](#todos)
   * [Credits](#credits)
-  * [Inspired by pSp](#inspired-by-psp)
-  * [pSp in the Media](#psp-in-the-media)
-  * [Citation](#citation)
-  
-## Recent Updates
-**`2020.10.04`**: Initial code release  
-**`2020.10.06`**: Add pSp toonify model (Thanks to the great work from [Doron Adler](https://linktr.ee/Norod78) and [Justin Pinkney](https://www.justinpinkney.com/))!  
-**`2021.04.23`**: Added several new features: 
-  - Added supported for StyleGANs of different resolutions (e.g., 256, 512, 1024). This can be set using the flag `--output_size`, which is set to 1024 by default. 
-  - Added support for the MoCo-Based similarity loss introduced in [encoder4editing (Tov et al. 2021)](https://github.com/omertov/encoder4editing). More details are provided [below](https://github.com/eladrich/pixel2style2pixel#training-psp).  
-  
-**`2021.07.06`**: Added support for training with Weights & Biases. [See below for details](https://github.com/eladrich/pixel2style2pixel#weights--biases-integration).
 
-## Applications
-### StyleGAN Encoding
-Here, we use pSp to find the latent code of real images in the latent domain of a pretrained StyleGAN generator. 
-<p align="center">
-<img src="docs/encoding_inputs.jpg" width="800px"/>
-<img src="docs/encoding_outputs.jpg" width="800px"/>
-</p>
+## Application
 
-
-### Face Frontalization
-In this application we want to generate a front-facing face from a given input image. 
-<p align="center">
-<img src="docs/frontalization_inputs.jpg" width="800px"/>
-<img src="docs/frontalization_outputs.jpg" width="800px"/>
-</p>
-
-### Conditional Image Synthesis
-Here we wish to generate photo-realistic face images from ambiguous sketch images or segmentation maps. Using style-mixing, we inherently support multi-modal synthesis for a single input.
+### Sketch to Face
+Here we wish to generate photo-realistic face images from ambiguous sketch images. Using style-mixing, we inherently support multi-modal synthesis for a single input.
 <p align="center">
 <img src="docs/seg2image.png" width="800px"/>
 <img src="docs/sketch2image.png" width="800px"/>
 </p>
 
-### Super Resolution
-Given a low-resolution input image, we generate a corresponding high-resolution image. As this too is an ambiguous task, we can use style-mixing to produce several plausible results.
-<p align="center">
-<img src="docs/super_res_32.jpg" width="800px"/>
-<img src="docs/super_res_style_mixing.jpg" width="800px"/>
-</p>
-
-
 ## Getting Started
 ### Prerequisites
-- Linux or macOS
-- NVIDIA GPU + CUDA CuDNN (CPU may be possible with some modifications, but is not inherently supported)
-- Python 2 or 3
+- We recommend run the scripts on Linux (HPC,  e.g. UM GreatLakes)
+- NVIDIA GPU with a large GPU memory (e.g. NVIDIA A40)
+- Python + CUDA version supporting the GPU
 
 ### Installation
 - Clone this repo:
-``` 
-git clone https://github.com/eladrich/pixel2style2pixel.git
-cd pixel2style2pixel
 ```
+git clone https://github.com/eladrich/pixel2style2pixel.git
+cd VisionDectectives
+```
+
 - Dependencies:  
 We recommend running this repository using [Anaconda](https://docs.anaconda.com/anaconda/install/). 
-All dependencies for defining the environment are provided in `environment/psp_env.yaml`.
+All dependencies for defining the environment are provided in `environment/psp_env.yaml`. (We need to update the env!!)
+```
+conda env create -f environment/psp_env.yml
+conda activate psp_env
+```
+```
+module load gcc
+module load cuda
+```
 
 ### Inference Notebook
-To help visualize the pSp framework on multiple tasks and to help you get started, we provide a Jupyter notebook found in `notebooks/inference_playground.ipynb` that allows one to visualize the various applications of pSp.   
+To help visualize the pSp framework on multiple tasks and to help you get started, we provide a Jupyter notebook found in `notebooks/inference_playground.ipynb` that allows one to visualize the various applications of pSp. 
+
 The notebook will download the necessary pretrained models and run inference on the images found in `notebooks/images`.  
-For the tasks of conditional image synthesis and super resolution, the notebook also demonstrates pSp's ability to perform multi-modal synthesis using 
-style-mixing. 
+The notebook also demonstrates pSp's ability to perform multi-modal synthesis using style-mixing. 
 
 ### Pretrained Models
 Please download the pre-trained models from the following links. Each pSp model contains the entire pSp architecture, including the encoder and decoder weights.
 | Path | Description
 | :--- | :----------
-|[StyleGAN Inversion](https://drive.google.com/file/d/1bMTNWkh5LArlaWSc_wa8VKyq2V42T2z0/view?usp=sharing)  | pSp trained with the FFHQ dataset for StyleGAN inversion.
-|[Face Frontalization](https://drive.google.com/file/d/1_S4THAzXb-97DbpXmanjHtXRyKxqjARv/view?usp=sharing)  | pSp trained with the FFHQ dataset for face frontalization.
-|[Sketch to Image](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
-|[Segmentation to Image](https://drive.google.com/file/d/1VpEKc6E6yG3xhYuZ0cq8D2_1CbT0Dstz/view?usp=sharing) | pSp trained with the CelebAMask-HQ dataset for image synthesis from segmentation maps.
-|[Super Resolution](https://drive.google.com/file/d/1ZpmSXBpJ9pFEov6-jjQstAlfYbkebECu/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for super resolution (up to x32 down-sampling).
-|[Toonify](https://drive.google.com/file/d/1YKoiVuFaqdvzDP5CZaqa3k5phL-VDmyz/view)  | pSp trained with the FFHQ dataset for toonification using StyleGAN generator from [Doron Adler](https://linktr.ee/Norod78) and [Justin Pinkney](https://www.justinpinkney.com/).
+|[Sketch to Image (Original PSP)](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
+|[Sketch to Image (Lambda attention 1e3)](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
+|[Sketch to Image (Lambda attention 1e9)](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
+
+**Add our models in!**
 
 If you wish to use one of the pretrained models for training or inference, you may do so using the flag `--checkpoint_path`.
 
@@ -146,6 +93,10 @@ In addition, we provide various auxiliary models needed for training your own pS
 |[MoCo ResNet-50](https://drive.google.com/file/d/18rLcNGdteX5LwT7sv_F7HWr12HpVEzVe/view?usp=sharing)  | Pretrained ResNet-50 model trained using MOCOv2 for computing MoCo-based similarity loss on non-facial domains. The model is taken from the [official implementation](https://github.com/facebookresearch/moco).
 |[CurricularFace Backbone](https://drive.google.com/file/d/1f4IwVa2-Bn9vWLwB-bUwm53U_MlvinAj/view?usp=sharing)  | Pretrained CurricularFace model taken from [HuangYG123](https://github.com/HuangYG123/CurricularFace) for use in ID similarity metric computation.
 |[MTCNN](https://drive.google.com/file/d/1tJ7ih-wbCO6zc3JhI_1ZGjmwXKKaPlja/view?usp=sharing)  | Weights for MTCNN model taken from [TreB1eN](https://github.com/TreB1eN/InsightFace_Pytorch) for use in ID similarity metric computation. (Unpack the tar.gz to extract the 3 model weights.)
+
+**Add the attention model in!**
+
+**And remove unnencessary models!**
 
 By default, we assume that all auxiliary models are downloaded and saved to the directory `pretrained_models`. However, you may use your own paths by changing the necessary values in `configs/path_configs.py`. 
 
@@ -189,56 +140,17 @@ The main training script can be found in `scripts/train.py`.
 Intermediate training results are saved to `opts.exp_dir`. This includes checkpoints, train outputs, and test outputs.  
 Additionally, if you have tensorboard installed, you can visualize tensorboard logs in `opts.exp_dir/logs`.
 
-#### Training the pSp Encoder
-```
-python scripts/train.py \
---dataset_type=ffhq_encode \
---exp_dir=/path/to/experiment \
---workers=8 \
---batch_size=8 \
---test_batch_size=8 \
---test_workers=8 \
---val_interval=2500 \
---save_interval=5000 \
---encoder_type=GradualStyleEncoder \
---start_from_latent_avg \
---lpips_lambda=0.8 \
---l2_lambda=1 \
---id_lambda=0.1
-```
-
-#### Frontalization
-```
-python scripts/train.py \
---dataset_type=ffhq_frontalize \
---exp_dir=/path/to/experiment \
---workers=8 \
---batch_size=8 \
---test_batch_size=8 \
---test_workers=8 \
---val_interval=2500 \
---save_interval=5000 \
---encoder_type=GradualStyleEncoder \
---start_from_latent_avg \
---lpips_lambda=0.08 \
---l2_lambda=0.001 \
---lpips_lambda_crop=0.8 \
---l2_lambda_crop=0.01 \
---id_lambda=1 \
---w_norm_lambda=0.005
-```
-
-#### Sketch to Face
+**Specify attention_lambda**
 ```
 python scripts/train.py \
 --dataset_type=celebs_sketch_to_face \
 --exp_dir=/path/to/experiment \
 --workers=8 \
---batch_size=8 \
---test_batch_size=8 \
+--batch_size=4 \
+--test_batch_size=4 \
 --test_workers=8 \
---val_interval=2500 \
---save_interval=5000 \
+--val_interval=10000 \
+--save_interval=20000 \
 --encoder_type=GradualStyleEncoder \
 --start_from_latent_avg \
 --lpips_lambda=0.8 \
@@ -246,49 +158,9 @@ python scripts/train.py \
 --id_lambda=0 \
 --w_norm_lambda=0.005 \
 --label_nc=1 \
---input_nc=1
-```
-
-#### Segmentation Map to Face
-```
-python scripts/train.py \
---dataset_type=celebs_seg_to_face \
---exp_dir=/path/to/experiment \
---workers=8 \
---batch_size=8 \
---test_batch_size=8 \
---test_workers=8 \
---val_interval=2500 \
---save_interval=5000 \
---encoder_type=GradualStyleEncoder \
---start_from_latent_avg \
---lpips_lambda=0.8 \
---l2_lambda=1 \
---id_lambda=0 \
---w_norm_lambda=0.005 \
---label_nc=19 \
---input_nc=19
-```
-Notice with conditional image synthesis no identity loss is utilized (i.e. `--id_lambda=0`)
-
-#### Super Resolution
-``` 
-python scripts/train.py \
---dataset_type=celebs_super_resolution \
---exp_dir=/path/to/experiment \
---workers=8 \
---batch_size=8 \
---test_batch_size=8 \
---test_workers=8 \
---val_interval=2500 \
---save_interval=5000 \
---encoder_type=GradualStyleEncoder \
---start_from_latent_avg \
---lpips_lambda=0.8 \
---l2_lambda=1 \
---id_lambda=0.1 \
---w_norm_lambda=0.005 \
---resize_factors=1,2,4,8,16,32
+--input_nc=1 \
+--max_steps=10000 \
+--attention_lambda=0
 ```
 
 ### Additional Notes
@@ -296,31 +168,24 @@ python scripts/train.py \
 - See `options/test_options.py` for all test-specific flags.
 - If you wish to resume from a specific checkpoint (e.g. a pretrained pSp model), you may do so using `--checkpoint_path`.
 - By default, we assume that the StyleGAN used outputs images at resolution `1024x1024`. If you wish to use a StyleGAN at a smaller resolution, you can do so by using the flag `--output_size` (e.g., `--output_size=256`). 
-- If you wish to generate images from segmentation maps, please specify `--label_nc=N`  and `--input_nc=N` where `N` 
-is the number of semantic categories. 
-- Similarly, for generating images from sketches, please specify `--label_nc=1` and `--input_nc=1`.
-- Specifying `--label_nc=0` (the default value), will directly use the RGB colors as input.
+- Please specify `--label_nc=1` and `--input_nc=1`.
 
-** Identity/Similarity Losses **   
+
+
+**Identity/Similarity Losses**   
+
 In pSp, we introduce a facial identity loss using a pre-trained ArcFace network for facial recognition. When operating on the human facial domain, we 
 highly recommend employing this loss objective by using the flag `--id_lambda`.  
+
 In a more recent paper, [encoder4editing](https://github.com/omertov/encoder4editing), the authors generalize this identity loss to other domains by 
 using a MoCo-based ResNet to extract features instead of an ArcFace network.
+
 Applying this MoCo-based similarity loss can be done by using the flag `--moco_lambda`. We recommend setting `--moco_lambda=0.5` in your experiments.  
+
 Please note, you <ins>cannot</ins> set both `id_lambda` and `moco_lambda` to be active simultaneously (e.g., to use the MoCo-based loss, you should specify, 
 `--moco_lambda=0.5 --id_lambda=0`).
 
-### Weights & Biases Integration
-To help track your experiments, we've integrated [Weights & Biases](https://wandb.ai/home) into our training process. 
-To enable Weights & Biases (`wandb`), first make an account on the platform's webpage and install `wandb` using 
-`pip install wandb`. Then, to train pSp using `wandb`, simply add the flag `--use_wandb`. 
-
-Note that when running for the first time, you will be asked to provide your access key which can be accessed via the
-Weights & Biases platform. 
-
-Using Weights & Biases will allow you to visualize the training and testing loss curves as well as 
-intermediate training results.
-
+**Shall we just remove this?**
 
 ## Testing
 ### Inference
@@ -342,8 +207,7 @@ test options passed to the inference script. For example, there is no need to pa
 - When running inference for segmentation-to-image or sketch-to-image, it is highly recommend to do so with a style-mixing,
 as is done in the paper. This can simply be done by adding `--latent_mask=8,9,10,11,12,13,14,15,16,17` when calling the 
 script.
-- When running inference for super-resolution, please provide a single down-sampling value using `--resize_factors`.
-- Adding the flag `--couple_outputs` will save an additional image containing the input and output images side-by-side in the sub-directory
+- Adding the flag `--couple_outputs` will save an additional image containing the original, input, and output images side-by-side in the sub-directory
 `inference_coupled`. Otherwise, only the output image is saved to the sub-directory `inference_results`.
 - By default, the images will be saved at resolutiosn of 1024x1024, the original output size of StyleGAN. If you wish to save 
 outputs resized to resolutions of 256x256, you can do so by adding the flag `--resize_outputs`.
@@ -377,57 +241,8 @@ outputs resized to resolutions of 256x256, you can do so by adding the flag `--r
 
 
 ### Computing Metrics
-Similarly, given a trained model and generated outputs, we can compute the loss metrics on a given dataset.  
-These scripts receive the inference output directory and ground truth directory.
-- Calculating the identity loss: 
-```
-python scripts/calc_id_loss_parallel.py \
---data_path=/path/to/experiment/inference_outputs \
---gt_path=/path/to/test_images \
-```
-- Calculating LPIPS loss:
-```
-python scripts/calc_losses_on_images.py \
---mode lpips
---data_path=/path/to/experiment/inference_outputs \
---gt_path=/path/to/test_images \
-```
-- Calculating L2 loss:
-```
-python scripts/calc_losses_on_images.py \
---mode l2
---data_path=/path/to/experiment/inference_outputs \
---gt_path=/path/to/test_images \
-```
-
-## Additional Applications
-To better show the flexibility of our pSp framework we present additional applications below.
-
-As with our main applications, you may download the pretrained models here: 
-| Path | Description
-| :--- | :----------
-|[Toonify](https://drive.google.com/file/d/1YKoiVuFaqdvzDP5CZaqa3k5phL-VDmyz/view)  | pSp trained with the FFHQ dataset for toonification using StyleGAN generator from [Doron Adler](https://linktr.ee/Norod78) and [Justin Pinkney](https://www.justinpinkney.com/).
-
-### Toonify
-Using the toonify StyleGAN built by [Doron Adler](https://linktr.ee/Norod78) and [Justin Pinkney](https://www.justinpinkney.com/),
-we take a real face image and generate a toonified version of the given image. We train the pSp encoder to directly reconstruct real 
-face images inside the toons latent space resulting in a projection of each image to the closest toon. We do so without requiring any labeled pairs
-or distillation!
-<p align="center">
-<img src="docs/toonify_input.jpg" width="800px"/>
-<img src="docs/toonify_output.jpg" width="800px"/>
-</p>
-
-This is trained exactly like the StyleGAN inversion task with several changes:   
-- Change from FFHQ StyleGAN to toonifed StyleGAN (can be set using `--stylegan_weights`)
-    - The toonify generator is taken from [Doron Adler](https://linktr.ee/Norod78) and [Justin Pinkney](https://www.justinpinkney.com/) 
-      and converted to Pytorch using [rosinality's](https://github.com/rosinality/stylegan2-pytorch) conversion script.
-    - For convenience, the converted generator Pytorch model may be downloaded [here](https://drive.google.com/file/d/1r3XVCt_WYUKFZFxhNH-xO2dTtF6B5szu/view?usp=sharing).
-- Increase `id_lambda` from `0.1` to `1`  
-- Increase `w_norm_lambda` from `0.005` to `0.025`  
-
-We obtain the best results after around `6000` iterations of training (can be set using `--max_steps`) 
-
+The Metrics calculation is done inside inference scripts.
+You will need to inspect the script and uncomment some parts to get more result.
 
 ## Repository structure
 | Path | Description <img width=200>
@@ -450,9 +265,13 @@ We obtain the best results after around `6000` iterations of training (can be se
 | <img width=300> | <img>
 
 ## TODOs
-- [ ] Add multi-gpu support
+- [ ] Something
 
 ## Credits
+**pSp Encoder**
+
+**Instruct Pix2Pix**
+
 **StyleGAN2 implementation:**  
 https://github.com/rosinality/stylegan2-pytorch  
 Copyright (c) 2019 Kim Seonghyeon  
@@ -477,41 +296,8 @@ https://github.com/S-aiueo32/lpips-pytorch
 Copyright (c) 2020, Sou Uchida  
 License (BSD 2-Clause) https://github.com/S-aiueo32/lpips-pytorch/blob/master/LICENSE  
 
+**Attention Loss:**  
+https://github.com/Jongchan/attention-module  
+Something here
+
 **Please Note**: The CUDA files under the [StyleGAN2 ops directory](https://github.com/eladrich/pixel2style2pixel/tree/master/models/stylegan2/op) are made available under the [Nvidia Source Code License-NC](https://nvlabs.github.io/stylegan2/license.html)
-
-## Inspired by pSp
-Below are several works inspired by pSp that we found particularly interesting:  
-
-**Reverse Toonification**  
-Using our pSp encoder, artist [Nathan Shipley](https://linktr.ee/nathan_shipley) transformed animated figures and paintings into real life. Check out his amazing work on his [twitter page](https://twitter.com/citizenplain?lang=en) and [website](http://www.nathanshipley.com/gan).   
-
-**Deploying pSp with StyleSpace for Editing**  
-Awesome work from [Justin Pinkney](https://www.justinpinkney.com/) who deployed our pSp model on Runway and provided support for editing the resulting inversions using the [StyleSpace Analysis paper](https://arxiv.org/abs/2011.12799). Check out his repository [here](https://github.com/justinpinkney/pixel2style2pixel).
-
-**Encoder4Editing (e4e)**   
-Building on the work of pSp, Tov et al. design an encoder to enable high quality edits on real images. Check out their [paper](https://arxiv.org/abs/2102.02766) and [code](https://github.com/omertov/encoder4editing).
-
-**Style-based Age Manipulation (SAM)**  
-Leveraging pSp and the rich semantics of StyleGAN, SAM learns non-linear latent space paths for modeling the age transformation of real face images. Check out the project page [here](https://yuval-alaluf.github.io/SAM/).
-
-**ReStyle**  
-ReStyle builds on recent encoders such as pSp and e4e by introducing an iterative refinment mechanism to gradually improve the inversion of real images. Check out the project page [here](https://yuval-alaluf.github.io/restyle-encoder/).
-
-## pSp in the Media
-* bycloud: [AI Generates Cartoon Characters In Real Life Pixel2Style2Pixel](https://www.youtube.com/watch?v=g-N8lfceclI&ab_channel=bycloud)
-* Synced: [Pixel2Style2Pixel: Novel Encoder Architecture Boosts Facial Image-To-Image Translation](https://syncedreview.com/2020/08/07/pixel2style2pixel-novel-encoder-architecture-boosts-facial-image-to-image-translation/)
-* Cartoon Brew: [An Artist Has Used Machine Learning To Turn Animated Characters Into Creepy Photorealistic Figures](https://www.cartoonbrew.com/tech/an-artist-has-used-machine-learning-to-turn-animated-characters-into-creepy-photorealistic-figures-197975.html)
-
-
-## Citation
-If you use this code for your research, please cite our paper <a href="https://arxiv.org/abs/2008.00951">Encoding in Style: a StyleGAN Encoder for Image-to-Image Translation</a>:
-
-```
-@InProceedings{richardson2021encoding,
-      author = {Richardson, Elad and Alaluf, Yuval and Patashnik, Or and Nitzan, Yotam and Azar, Yaniv and Shapiro, Stav and Cohen-Or, Daniel},
-      title = {Encoding in Style: a StyleGAN Encoder for Image-to-Image Translation},
-      booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-      month = {June},
-      year = {2021}
-}
-```
