@@ -78,8 +78,6 @@ Please download the pre-trained models from the following links. Each pSp model 
 |[Sketch to Image (Lambda attention 1e3)](https://drive.google.com/file/d/1YS4IsZrZkxSVMsuL96NTAORitAg-EMuy/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
 |[Sketch to Image (Lambda attention 1e9)](https://drive.google.com/file/d/1RBOG-q10AeTDF3lkxBdBkLGPqW-bpY5V/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
 
-**Add our models in (original and 1e9)!**
-
 If you wish to use one of the pretrained models for training or inference, you may do so using the flag `--checkpoint_path`.
 
 In addition, we provide various auxiliary models needed for training your own pSp model from scratch as well as pretrained models needed for computing the ID metrics reported in the paper.
@@ -89,10 +87,6 @@ In addition, we provide various auxiliary models needed for training your own pS
 |[IR-SE50 Model](https://drive.google.com/file/d/1KW7bjndL3QG3sxBbZxreGHigcCCpsDgn/view?usp=sharing) | Pretrained IR-SE50 model taken from [TreB1eN](https://github.com/TreB1eN/InsightFace_Pytorch) for use in our ID loss during pSp training.
 |[CurricularFace Backbone](https://drive.google.com/file/d/1f4IwVa2-Bn9vWLwB-bUwm53U_MlvinAj/view?usp=sharing)  | Pretrained CurricularFace model taken from [HuangYG123](https://github.com/HuangYG123/CurricularFace) for use in ID similarity metric computation.
 |[MTCNN](https://drive.google.com/file/d/1tJ7ih-wbCO6zc3JhI_1ZGjmwXKKaPlja/view?usp=sharing)  | Weights for MTCNN model taken from [TreB1eN](https://github.com/TreB1eN/InsightFace_Pytorch) for use in ID similarity metric computation. (Unpack the tar.gz to extract the 3 model weights.)
-
-**Add the attention model in!**
-
-**And remove unnencessary models!**
 
 By default, we assume that all auxiliary models are downloaded and saved to the directory `pretrained_models`. However, you may use your own paths by changing the necessary values in `configs/path_configs.py`. 
 
