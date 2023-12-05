@@ -47,13 +47,14 @@ Here we wish to generate photo-realistic face images from ambiguous sketch image
 ### Installation
 - Clone this repo:
 ```
-git clone https://github.com/eladrich/pixel2style2pixel.git
+git clone https://github.com/inbumpark/VisionDetectives
 cd VisionDectectives
 ```
 
 - Dependencies:  
 We recommend running this repository using [Anaconda](https://docs.anaconda.com/anaconda/install/). 
-All dependencies for defining the environment are provided in `environment/psp_env.yaml`. (We need to update the env!!)
+All dependencies for defining the environment are provided in `environment/psp_env.yaml`.
+You might need to update dependencies to fit you hardware.
 ```
 conda env create -f environment/psp_env.yml
 conda activate psp_env
