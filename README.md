@@ -75,10 +75,10 @@ Please download the pre-trained models from the following links. Each pSp model 
 | Path | Description
 | :--- | :----------
 |[Sketch to Image (Original PSP)](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
-|[Sketch to Image (Lambda attention 1e3)](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
+|[Sketch to Image (Lambda attention 1e3)](https://drive.google.com/file/d/1YS4IsZrZkxSVMsuL96NTAORitAg-EMuy/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
 |[Sketch to Image (Lambda attention 1e9)](https://drive.google.com/file/d/1lB7wk7MwtdxL-LL4Z_T76DuCfk00aSXA/view?usp=sharing)  | pSp trained with the CelebA-HQ dataset for image synthesis from sketches.
 
-**Add our models in!**
+**Add our models in (original and 1e9)!**
 
 If you wish to use one of the pretrained models for training or inference, you may do so using the flag `--checkpoint_path`.
 
