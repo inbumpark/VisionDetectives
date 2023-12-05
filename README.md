@@ -35,7 +35,6 @@ The second stage stylizes the output with instructions (e.g. "brown hair and blu
 ### Sketch to Face
 Here we wish to generate photo-realistic face images from ambiguous sketch images. Using style-mixing, we inherently support multi-modal synthesis for a single input.
 <p align="center">
-<img src="docs/sketch2image.png" width="800px"/>
 <img src="docs/qualitative.png" width="800px"/>
 </p>
 
