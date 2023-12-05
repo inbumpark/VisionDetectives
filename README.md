@@ -275,6 +275,11 @@ https://github.com/timothybrooks/instruct-pix2pix
 Copyright 2023 Timothy Brooks, Aleksander Holynski, Alexei A. Efros   
 License https://github.com/timothybrooks/instruct-pix2pix/blob/main/LICENSE
 
+**Attention Loss:**  
+https://github.com/Jongchan/attention-module   
+Copyright (c) 2019 Jongchan Park   
+License (MIT) https://github.com/Jongchan/attention-module/blob/master/LICENSE    
+
 **StyleGAN2 implementation:**  
 https://github.com/rosinality/stylegan2-pytorch  
 Copyright (c) 2019 Kim Seonghyeon  
@@ -298,10 +303,5 @@ License (Apache License 2.0) https://github.com/lessw2020/Ranger-Deep-Learning-O
 https://github.com/S-aiueo32/lpips-pytorch  
 Copyright (c) 2020, Sou Uchida  
 License (BSD 2-Clause) https://github.com/S-aiueo32/lpips-pytorch/blob/master/LICENSE  
-
-**Attention Loss:**  
-https://github.com/Jongchan/attention-module   
-Copyright (c) 2019 Jongchan Park   
-License (MIT) https://github.com/Jongchan/attention-module/blob/master/LICENSE    
 
 **Please Note**: The CUDA files under the [StyleGAN2 ops directory](https://github.com/eladrich/pixel2style2pixel/tree/master/models/stylegan2/op) are made available under the [Nvidia Source Code License-NC](https://nvlabs.github.io/stylegan2/license.html)
