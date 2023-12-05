@@ -65,7 +65,7 @@ module load cuda
 ```
 
 ### Inference Notebook
-To help visualize the pSp framework on multiple tasks and to help you get started, we provide a Jupyter notebook found in `notebooks/inference_playground.ipynb` that allows one to visualize the various applications of pSp. 
+To help visualize the pSp framework on multiple tasks and to help you get started, we provide a Jupyter notebook in the top that allows one to visualize the various applications of pSp. 
 
 The notebook will download the necessary pretrained models and run inference on the images found in `notebooks/images`.  
 The notebook also demonstrates pSp's ability to perform multi-modal synthesis using style-mixing. 
