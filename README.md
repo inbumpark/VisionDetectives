@@ -1,4 +1,4 @@
-# CriminalCanvas: From Sketch to Solution in Stylized Montages
+# \[UM EECS 504 Project\] CriminalCanvas: From Sketch to Solution in Stylized Montages
 
 <a href="https://colab.research.google.com/drive/1Qep2fBYkCuXvMlIib25FHlMvZ-VhmRAB?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" height=22.5></a>  
 
@@ -236,9 +236,6 @@ You will need to inspect the script and uncomment some parts to get more result.
 | &boxvr;&nbsp; training | Folder with main training logic and Ranger implementation from [lessw2020](https://github.com/lessw2020/Ranger-Deep-Learning-Optimizer)
 | &boxvr;&nbsp; utils | Folder with various utility functions
 | <img width=300> | <img>
-
-## TODOs
-- [ ] Something
 
 ## Credits
 **pSp Encoder**   
