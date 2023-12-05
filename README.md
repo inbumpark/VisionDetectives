@@ -2,7 +2,7 @@
 
 Replace this to our colab
 
-<a href="http://colab.research.google.com/github/eladrich/pixel2style2pixel/blob/master/notebooks/inference_playground.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" height=22.5></a>  
+<a href="https://colab.research.google.com/drive/1Qep2fBYkCuXvMlIib25FHlMvZ-VhmRAB?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" height=22.5></a>  
 
 > Given a sketch from the montage artist, we aim to reconstruct and stylize a montage of a criminal which highly resembles their appearance.
 
