@@ -265,9 +265,15 @@ You will need to inspect the script and uncomment some parts to get more result.
 - [ ] Something
 
 ## Credits
-**pSp Encoder**
+**pSp Encoder**   
+https://github.com/eladrich/pixel2style2pixel   
+Copyright (c) 2020 Elad Richardson, Yuval Alaluf   
+MIT License https://github.com/eladrich/pixel2style2pixel/blob/master/LICENSE
 
-**Instruct Pix2Pix**
+**Instruct Pix2Pix**   
+https://github.com/timothybrooks/instruct-pix2pix   
+Copyright 2023 Timothy Brooks, Aleksander Holynski, Alexei A. Efros   
+https://github.com/timothybrooks/instruct-pix2pix/blob/main/LICENSE
 
 **StyleGAN2 implementation:**  
 https://github.com/rosinality/stylegan2-pytorch  
